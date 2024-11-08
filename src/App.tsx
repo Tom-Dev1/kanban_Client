@@ -1,5 +1,7 @@
 import { ConfigProvider, message } from 'antd';
 import Routers from './routers/Routers';
+import { Provider } from 'react-redux';
+import store from './reduxs/store';
 
 export default function App() {
   //provider
@@ -19,7 +21,9 @@ export default function App() {
           components: {},
         }}
       >
-        <Routers />
+        <Provider store={store}>
+          <Routers />
+        </Provider>
       </ConfigProvider>
     </>
   );
