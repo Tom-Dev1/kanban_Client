@@ -1,17 +1,27 @@
-import { Button, Card, Checkbox, Form, Input, Space, Typography } from 'antd';
+import { Button, Card, Form, Input, message, Space, Typography } from 'antd';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SocialLogin from './components/SocialLogin';
+import handleAPI from '../../apis/handleAPI';
 const { Title, Paragraph, Text } = Typography;
 
 const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRemember, setIsRemember] = useState(false);
   const [form] = Form.useForm();
 
-  const handleLogin = (value: { email: string; password: string }) => {
-    // Call your login API here
+  const handleLogin = async (value: { email: string; password: string }) => {
+    const api = `/auth/register`;
     console.log('Received values of form: ', value);
+    setIsLoading(true);
+    try {
+      const res = await handleAPI(api, value, 'post');
+      console.log(res);
+    } catch (error: any) {
+      message.error(error.message);
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <>
@@ -27,7 +37,6 @@ const SignUp = () => {
           disabled={isLoading}
           size="large"
         >
-          {' '}
           <Form.Item
             label="Name"
             name={'name'}
@@ -64,6 +73,16 @@ const SignUp = () => {
                 required: true,
                 message: 'Please input your Password"!',
               },
+              () => ({
+                validator: (_, value) => {
+                  if (value.length < 6) {
+                    return Promise.reject(
+                      'Password should be at least 6 characters long'
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              }),
             ]}
           >
             <Input.Password
@@ -76,12 +95,13 @@ const SignUp = () => {
 
         <div className="mt-4 mb-3">
           <Button
+            loading={isLoading}
             onClick={() => form.submit()}
             type="primary"
             style={{ width: '100%' }}
             size="large"
           >
-            Login
+            Sign Up
           </Button>
         </div>
         <SocialLogin />
