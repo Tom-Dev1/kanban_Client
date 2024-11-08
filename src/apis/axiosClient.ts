@@ -16,16 +16,16 @@ axiosClient.interceptors.request.use(async (config: any) => {
   return config;
 });
 
-axios.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (res) => {
     if (res.data && res.status >= 200 && res.status < 300) {
       return res.data;
     } else {
-      return Promise.reject;
+      return Promise.reject(res.data);
     }
   },
   (err) => {
-    const response = err;
+    const { response } = err;
     return Promise.reject(response.data);
   }
 );
