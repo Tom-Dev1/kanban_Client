@@ -14,6 +14,8 @@ import SocialLogin from './components/SocialLogin';
 import handleAPI from '../../apis/handleAPI';
 import { useDispatch } from 'react-redux';
 import { addAuth } from '../../reduxs/reducers/authReducer';
+import { localStorageDataNames } from '../../constants/appInfors';
+import { auth } from '../../firebase/firebaseConfig';
 
 const { Title, Paragraph, Text } = Typography;
 const Login = () => {
@@ -23,15 +25,24 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const handleLogin = async (value: { email: string; password: string }) => {
+    setIsLoading(true);
     try {
       const res: any = await handleAPI('/auth/login', value, 'post');
 
       message.success(res.message);
 
       res.data && dispatch(addAuth(res.data));
+      if (isRemember) {
+        localStorage.setItem(
+          localStorageDataNames.authData,
+          JSON.stringify(res.data)
+        );
+      }
     } catch (error: any) {
       message.error(error.message);
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -109,9 +120,10 @@ const Login = () => {
             <Link to={'/forgot-password'}>Forgot Password?</Link>
           </div>
         </div>
-
+        <Button onClick={() => auth.signOut()}>Logout </Button>
         <div className="mt-4 mb-3">
           <Button
+            loading={isLoading}
             onClick={() => form.submit()}
             type="primary"
             style={{ width: '100%' }}
@@ -120,7 +132,7 @@ const Login = () => {
             Login
           </Button>
         </div>
-        <SocialLogin />
+        <SocialLogin isRemember= {isRemember}/>
         <div className="mt-4 text-center">
           <Space>
             <Text>Don't have an account?</Text>
