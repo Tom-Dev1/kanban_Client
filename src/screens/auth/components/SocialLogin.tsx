@@ -38,12 +38,14 @@ const SocialLogin = (props: Props) => {
             const res: any = await handleAPI(api, data, 'post');
             console.log(res);
             message.success(res.message);
+
             dispatch(addAuth(res.data));
             if (isRemember) {
               localStorage.setItem(
                 localStorageDataNames.authData,
                 JSON.stringify(res.data)
               );
+            }
           } catch (error: any) {
             console.log(error);
             message.error(error.message);
