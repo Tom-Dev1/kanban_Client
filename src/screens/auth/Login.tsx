@@ -11,11 +11,11 @@ import {
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SocialLogin from './components/SocialLogin';
-import handleAPI from '../../apis/handleAPI';
 import { useDispatch } from 'react-redux';
 import { addAuth } from '../../reduxs/reducers/authReducer';
-import { localStorageDataNames } from '../../constants/appInfors';
+import { appInfor, localStorageDataNames } from '../../constants/appInfors';
 import { auth } from '../../firebase/firebaseConfig';
+import handleAPI from '@/apis/handleAPI';
 
 const { Title, Paragraph, Text } = Typography;
 const Login = () => {
@@ -32,6 +32,7 @@ const Login = () => {
       message.success(res.message);
 
       res.data && dispatch(addAuth(res.data));
+
       if (isRemember) {
         localStorage.setItem(
           localStorageDataNames.authData,
@@ -49,13 +50,7 @@ const Login = () => {
     <>
       <Card>
         <div className="text-center">
-          <img
-            style={{ width: 45 }}
-            src={
-              'https://firebasestorage.googleapis.com/v0/b/kanban-c0323.appspot.com/o/kanban-logo.png?alt=media&token=a3e8c386-57da-49a3-b9a2-94b8fd93ff83'
-            }
-            alt=""
-          />
+          <img style={{ width: 45 }} src={appInfor.logo} alt="" />
           <Title level={2}>Log in to your account</Title>
           <Paragraph type="secondary">
             Wellcome back! Please enter your details
@@ -132,7 +127,7 @@ const Login = () => {
             Login
           </Button>
         </div>
-        <SocialLogin isRemember= {isRemember}/>
+        <SocialLogin isRemember={isRemember} />
         <div className="mt-4 text-center">
           <Space>
             <Text>Don't have an account?</Text>

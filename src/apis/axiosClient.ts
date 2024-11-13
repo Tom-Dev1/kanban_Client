@@ -1,19 +1,30 @@
+import { localStorageDataNames } from '@/constants/appInfors';
 import axios from 'axios';
 import queryString from 'query-string';
 
 const baseURL = `http://localhost:3001`;
+const getAccessToken = () => {
+  const res = localStorage.getItem(localStorageDataNames.authData);
+
+  return res ? JSON.parse(res).token : '';
+};
+
 const axiosClient = axios.create({
   baseURL,
   paramsSerializer: (params) => queryString.stringify(params),
 });
+
 axiosClient.interceptors.request.use(async (config: any) => {
+  const accessToken = getAccessToken();
   config.headers = {
-    Authorization: '',
+    Authorization: accessToken ? `Bearer ${accessToken}` : '',
     Accpect: 'application/json',
     ...config.headers,
   };
-  config.data;
-  return config;
+
+  console.log(config);
+
+  return { ...config, data: config.data ?? null };
 });
 
 axiosClient.interceptors.response.use(

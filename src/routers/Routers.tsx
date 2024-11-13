@@ -21,5 +21,8 @@ export default function Routers() {
     const res = localStorage.getItem(localStorageDataNames.authData);
     res && dispactch(addAuth(JSON.parse(res)));
   };
+  const handleCheckToken = async () => {
+    
+  }
   return isLoading ? <Spin /> : !auth.token ? <AuthRouter /> : <MainRouter />;
 }
