@@ -8,7 +8,7 @@ const HeaderComponent = () => {
       <div className="col">
         <Input
           type="text"
-          placeholder="Search..."
+          placeholder="Search product, supplier, order"
           size="large"
           style={{
             borderRadius: 100,

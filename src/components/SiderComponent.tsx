@@ -5,18 +5,20 @@ import { CiViewList } from 'react-icons/ci';
 import { MdOutlineInventory } from 'react-icons/md';
 import { appInfor } from '@/constants/appInfors';
 import { colors } from '@/constants/color';
+
 const { Sider } = Layout;
 const { Text } = Typography;
 type MenuItem = Required<MenuProps>['items'][number];
+
 const SiderComponent = () => {
   const items: MenuItem[] = [
     {
-      key: 'Dashboard',
-      label: <Link to={'/'}>Darhboard</Link>,
+      key: 'dashboard',
+      label: <Link to={'/'}>Dashboard</Link>,
       icon: <Home2 size={20} />,
     },
     {
-      key: 'Inventory',
+      key: 'inventory',
       label: <Link to={'/inventory'}>Inventory</Link>,
       icon: <MdOutlineInventory size={20} />,
     },
@@ -42,7 +44,7 @@ const SiderComponent = () => {
     },
   ];
   return (
-    <Sider theme="light" style={{ height: '100vh' }}>
+    <Sider width={280} theme="light" style={{ height: '98vh' }}>
       <div className="p-2 d-flex">
         <img src={appInfor.logo} width={48} alt="/" />
         <Text

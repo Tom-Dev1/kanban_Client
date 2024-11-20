@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Login, SignUp } from '../screens';
 import { Typography } from 'antd';
+import Login from '@/screens/auth/Login';
+import SignUp from '@/screens/auth/SignUp';
 const { Title } = Typography;
 
 export default function AuthRouter() {
