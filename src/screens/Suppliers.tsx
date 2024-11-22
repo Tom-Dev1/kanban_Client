@@ -166,7 +166,7 @@ const Suppliers = () => {
       //soft delete
       // await handleAPI(`/supplier/update?id=${id}`, { isDeleted: true }, 'put');
       await handleAPI(`/supplier/remove?id=${id}`, {}, 'delete');
-      setSuppliers((prev) => prev.filter((suppliers) => suppliers._id !== id));
+      await getSuppliers();
       message.success('Supplier removed successfully');
     } catch (error) {
       console.log(error);
