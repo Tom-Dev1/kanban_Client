@@ -9,4 +9,6 @@ export interface SupplierModel {
   photoUrl: string;
   _id: string;
   createdAt: string;
+  email: string;
+  active: number;
 }

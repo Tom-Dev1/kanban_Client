@@ -22,8 +22,6 @@ axiosClient.interceptors.request.use(async (config: any) => {
     ...config.headers,
   };
 
-  console.log(config);
-
   return { ...config, data: config.data ?? null };
 });
 

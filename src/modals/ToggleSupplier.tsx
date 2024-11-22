@@ -1,5 +1,7 @@
+import handleAPI from '@/apis/handleAPI';
+import { SupplierModel } from '@/models/SupplierModel';
+import { replaceName } from '@/utils/replaceName';
 import { uploadFile } from '@/utils/UpLoadFile';
-import { colors } from '../constants/color';
 import {
   Avatar,
   Button,
@@ -11,10 +13,9 @@ import {
   Typography,
 } from 'antd';
 import { User } from 'iconsax-react';
-import { useRef, useState } from 'react';
-import { replaceName } from '@/utils/replaceName';
-import handleAPI from '@/apis/handleAPI';
-import { SupplierModel } from '@/models/SupplierModel';
+import { useEffect, useRef, useState } from 'react';
+import { colors } from '../constants/color';
+import { demoData } from '@/data/demodata';
 
 const { Paragraph } = Typography;
 interface Props {
@@ -33,11 +34,20 @@ const ToggleSupplier = (props: Props) => {
   const [form] = Form.useForm();
   const inpRef = useRef<any>();
 
+  useEffect(() => {
+    if (supplier) {
+      form.setFieldsValue(supplier);
+
+      setIsTaking(supplier.isTaking === true);
+    }
+  }, [supplier]);
   const addNewSupplier = async (values: any) => {
     setIsLoading(true);
 
     const data: any = {};
-    const api = `/supplier/add-new`;
+    const api = `/supplier/${
+      supplier ? `update?id=${supplier._id}` : 'add-new'
+    }`;
 
     for (const i in values) {
       data[i] = values[i] ?? '';
@@ -54,11 +64,12 @@ const ToggleSupplier = (props: Props) => {
     data.slug = replaceName(values.name);
 
     try {
-      const res: any = await handleAPI(api, data, 'post');
+      const res: any = await handleAPI(api, data, supplier ? 'put' : 'post');
       message.success(res.message);
-      onAddNew(res.data);
+      !supplier && onAddNew(res.data);
+
+      demoData.forEach((item) => console.log(item));
       handleClose();
-      console.log('API Response:', res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -67,6 +78,7 @@ const ToggleSupplier = (props: Props) => {
   };
   const handleClose = () => {
     form.resetFields();
+    setFile(undefined);
     onClose();
   };
   return (
@@ -75,11 +87,11 @@ const ToggleSupplier = (props: Props) => {
       open={visible}
       onClose={handleClose}
       onCancel={handleClose}
-      title="Add Supplier"
+      title={supplier ? 'Update' : 'Add Supplier'}
       okButtonProps={{
         loading: isLoading,
       }}
-      okText="Add Supplier"
+      okText={supplier ? 'Update' : 'Add Supplier'}
       cancelText="Discard"
       onOk={() => form.submit()}
     >
@@ -95,6 +107,8 @@ const ToggleSupplier = (props: Props) => {
         <label htmlFor="inpFile" className="p-2 mb-3 row">
           {file ? (
             <Avatar size={100} src={URL.createObjectURL(file)} />
+          ) : supplier ? (
+            <Avatar size={100} src={supplier.photoUrl} />
           ) : (
             <Avatar
               size={100}
@@ -127,6 +141,12 @@ const ToggleSupplier = (props: Props) => {
         </Form.Item>
         <Form.Item name={'product'} label="Product Name">
           <Input placeholder="Enter Product Name" allowClear />
+        </Form.Item>
+        <Form.Item name={'email'} label="Email">
+          <Input placeholder="Enter Email Name" allowClear type="email" />
+        </Form.Item>
+        <Form.Item name={'active'} label="Active">
+          <Input placeholder="" allowClear type="number" />
         </Form.Item>
         <Form.Item name={'categories'} label="Category Name">
           <Select options={[]} placeholder="Category" />

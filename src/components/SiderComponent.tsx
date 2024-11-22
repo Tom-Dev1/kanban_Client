@@ -44,7 +44,13 @@ const SiderComponent = () => {
     },
   ];
   return (
-    <Sider width={280} theme="light" style={{ height: '98vh' }}>
+    <Sider
+      width={280}
+      theme="light"
+      style={{
+        height: '100vh',
+      }}
+    >
       <div className="p-2 d-flex">
         <img src={appInfor.logo} width={48} alt="/" />
         <Text

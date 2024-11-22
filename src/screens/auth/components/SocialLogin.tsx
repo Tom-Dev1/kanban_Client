@@ -9,10 +9,10 @@ import { addAuth } from '../../../reduxs/reducers/authReducer';
 import { localStorageDataNames } from '../../../constants/appInfors';
 
 const provider = new GoogleAuthProvider();
-provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
-provider.setCustomParameters({
-  login_hint: 'truongthanhh88@gmail.com',
-});
+// provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+// provider.setCustomParameters({
+//   login_hint: 'truongthanhh88@gmail.com',
+// });
 
 interface Props {
   isRemember?: boolean;
@@ -31,6 +31,7 @@ const SocialLogin = (props: Props) => {
           const data = {
             name: user.displayName,
             email: user.email,
+            photoUrl: user.photoURL,
           };
           const api = `/auth/google-login`;
 
@@ -61,7 +62,6 @@ const SocialLogin = (props: Props) => {
     }
   };
 
-  console.log();
 
   return (
     <Button
