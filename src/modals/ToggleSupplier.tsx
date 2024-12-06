@@ -2,20 +2,14 @@ import handleAPI from '@/apis/handleAPI';
 import { SupplierModel } from '@/models/SupplierModel';
 import { replaceName } from '@/utils/replaceName';
 import { uploadFile } from '@/utils/UpLoadFile';
-import {
-  Avatar,
-  Button,
-  Form,
-  Input,
-  message,
-  Modal,
-  Select,
-  Typography,
-} from 'antd';
+import { Avatar, Button, Form, message, Modal, Typography } from 'antd';
 import { User } from 'iconsax-react';
 import { useEffect, useRef, useState } from 'react';
 import { colors } from '../constants/color';
 import { demoData } from '@/data/demodata';
+import { FormModel } from '@/models/FormModel';
+import FormItem from '@/components/FormItem';
+import React from 'react';
 
 const { Paragraph } = Typography;
 interface Props {
@@ -28,12 +22,23 @@ const ToggleSupplier = (props: Props) => {
   const { visible, onAddNew, onClose, supplier } = props;
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isGetting, setIsGetting] = useState(false);
   const [isTaking, setIsTaking] = useState<boolean>();
+  const [formData, setFormData] = useState<FormModel>();
   const [file, setFile] = useState<any>();
 
   const [form] = Form.useForm();
-  const inpRef = useRef<any>();
-
+  const inpRef = useRef<any>(null);
+  useEffect(() => {
+    if (inpRef.current) {
+      // Access the DOM element using myRef.current
+      console.log('inpref log: ', inpRef.current); //Example: Log the element
+      // Perform actions on myRef.current, replacing findDOMNode usage
+    }
+  }, []); // Empty dependency array ensures this runs only once after mount
+  useEffect(() => {
+    getFormData();
+  }, []);
   useEffect(() => {
     if (supplier) {
       form.setFieldsValue(supplier);
@@ -41,6 +46,7 @@ const ToggleSupplier = (props: Props) => {
       setIsTaking(supplier.isTaking === true);
     }
   }, [supplier]);
+
   const addNewSupplier = async (values: any) => {
     setIsLoading(true);
 
@@ -76,6 +82,19 @@ const ToggleSupplier = (props: Props) => {
       setIsLoading(false);
     }
   };
+
+  const getFormData = async () => {
+    const api = `/supplier/get-form`;
+    setIsGetting(true);
+    try {
+      const res = await handleAPI(api);
+      res.data && setFormData(res.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsGetting(false);
+    }
+  };
   const handleClose = () => {
     form.resetFields();
     setFile(undefined);
@@ -83,6 +102,7 @@ const ToggleSupplier = (props: Props) => {
   };
   return (
     <Modal
+      loading={isGetting}
       closable={!isLoading}
       open={visible}
       onClose={handleClose}
@@ -95,87 +115,47 @@ const ToggleSupplier = (props: Props) => {
       cancelText="Discard"
       onOk={() => form.submit()}
     >
-      <Form
-        disabled={isLoading}
-        onFinish={addNewSupplier}
-        layout="horizontal"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        size="large"
-        form={form}
-      >
-        <label htmlFor="inpFile" className="p-2 mb-3 row">
-          {file ? (
-            <Avatar size={100} src={URL.createObjectURL(file)} />
-          ) : supplier ? (
-            <Avatar size={100} src={supplier.photoUrl} />
-          ) : (
-            <Avatar
-              size={100}
-              style={{ backgroundColor: 'white', border: '1px dashed #e0e0e0' }}
-            >
-              <User size={80} color={colors.gray600} />
-            </Avatar>
-          )}
-
-          <div className="ml-3">
-            <Paragraph className="text-muted m-0">Drag image here</Paragraph>
-            <Paragraph className="text-muted mb-2">Or</Paragraph>
-            <Button onClick={() => inpRef.current.click()} type="link">
-              Browse image
-            </Button>
-          </div>
-        </label>
-
-        <Form.Item
-          name={'name'}
-          label="Supplier Name"
-          rules={[
-            {
-              required: true,
-              message: 'Enter supplier name',
-            },
-          ]}
-        >
-          <Input placeholder="Enter supplier name" allowClear />
-        </Form.Item>
-        <Form.Item name={'product'} label="Product Name">
-          <Input placeholder="Enter Product Name" allowClear />
-        </Form.Item>
-        <Form.Item name={'email'} label="Email">
-          <Input placeholder="Enter Email Name" allowClear type="email" />
-        </Form.Item>
-        <Form.Item name={'active'} label="Active">
-          <Input placeholder="" allowClear type="number" />
-        </Form.Item>
-        <Form.Item name={'categories'} label="Category Name">
-          <Select options={[]} placeholder="Category" />
-        </Form.Item>
-        <Form.Item name={'price'} label="Buy Price">
-          <Input placeholder="Enter buying price" type="number" allowClear />
-        </Form.Item>
-        <Form.Item name={'contact'} label="Contact Name">
-          <Input placeholder="Enter supplier contact number" allowClear />
-        </Form.Item>
-        <Form.Item label="Type">
-          <div className="mb-2">
-            <Button
-              size="middle"
-              onClick={() => setIsTaking(false)}
-              type={isTaking === false ? 'primary' : 'default'}
-            >
-              Not taking return
-            </Button>
-          </div>
-          <Button
-            size="middle"
-            onClick={() => setIsTaking(true)}
-            type={isTaking ? 'primary' : 'default'}
+      <label htmlFor="inpFile" className="p-2 mb-3 row">
+        {file ? (
+          <Avatar size={100} src={URL.createObjectURL(file)} />
+        ) : supplier ? (
+          <Avatar size={100} src={supplier.photoUrl} />
+        ) : (
+          <Avatar
+            size={100}
+            style={{
+              backgroundColor: 'white',
+              border: '1px dashed #e0e0e0',
+            }}
           >
-            Taking return
+            <User size={80} color={colors.gray600} />
+          </Avatar>
+        )}
+
+        <div className="ml-3">
+          <Paragraph className="text-muted m-0">Drag image here</Paragraph>
+          <Paragraph className="text-muted mb-2">Or</Paragraph>
+          <Button onClick={() => inpRef.current.click()} type="link">
+            Browse image
           </Button>
-        </Form.Item>
-      </Form>
+        </div>
+      </label>
+      {formData && (
+        <Form
+          disabled={isLoading}
+          onFinish={addNewSupplier}
+          layout={formData.layout}
+          labelCol={{ span: formData.labelCol }}
+          wrapperCol={{ span: formData.wrapperCol }}
+          size="large"
+          form={form}
+        >
+          {formData.formItems.map((item) => (
+            <FormItem key={item.key} item={item} />
+          ))}
+        </Form>
+      )}
+
       <div className="d-none">
         <input
           accept="image/*"

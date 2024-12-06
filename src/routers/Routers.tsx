@@ -14,14 +14,14 @@ export default function Routers() {
   const [isLoading, setIsLoading] = useState(false);
 
   const auth: AuthState = useSelector(authSelector);
-  const dispactch = useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {
     getData();
   }, []);
 
   const getData = async () => {
     const res = localStorage.getItem(localStorageDataNames.authData);
-    res && dispactch(addAuth(JSON.parse(res)));
+    res && dispatch(addAuth(JSON.parse(res)));
   };
   // const handleCheckToken = async () => {
 

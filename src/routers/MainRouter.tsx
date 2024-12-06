@@ -13,7 +13,11 @@ import HomeScreen from '@/screens/HomeScreen';
 const { Content } = Layout;
 export default function MainRouter(): JSX.Element {
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+      }}
+    >
       <Layout>
         <Affix offsetTop={0}>
           <SiderComponent />
@@ -28,7 +32,7 @@ export default function MainRouter(): JSX.Element {
           </Affix>
           <Content className="pt-3 container-fluid">
             <Routes>
-              <Route index path="/*" element={<HomeScreen />} />
+              <Route index path="/" element={<HomeScreen />} />
               <Route path="/inventory" element={<Inventories />} />
               <Route path="/report" element={<ReportScreen />} />
               <Route path="/suppliers" element={<Suppliers />} />

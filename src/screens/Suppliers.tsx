@@ -126,8 +126,19 @@ const Suppliers = () => {
     setIsLoading(true);
     try {
       const res = await handleAPI(api);
-      console.log(res.data);
+
       res.data && setSuppliers(res.data.items);
+
+      const items: SupplierModel[] = [];
+
+      res.data.items.forEach((item: any, index: number) => {
+        items.push({
+          index: page - 1 + pageSize + (index + 1),
+          ...item,
+        });
+      });
+
+      setSuppliers(items);
       setTotal(res.data.total);
     } catch (err: any) {
       message.error(err.message);

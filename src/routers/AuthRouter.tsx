@@ -28,7 +28,11 @@ export default function AuthRouter() {
         </div>
 
         <div className="col content-center">
-          <BrowserRouter>
+          <BrowserRouter
+            future={{
+              v7_relativeSplatPath: true,
+            }}
+          >
             <Routes>
               <Route path="/" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} />

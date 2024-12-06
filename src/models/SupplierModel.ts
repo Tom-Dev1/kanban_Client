@@ -1,14 +1,16 @@
 export interface SupplierModel {
+  index: number;
   name: string;
   slug: string;
   product: string;
-  categorires: String[];
+  categories: string[];
   price: number;
   contact: string;
   isTaking: boolean;
   photoUrl: string;
-  _id: string;
   createdAt: string;
+  updatedAt: string;
   email: string;
-  active: number;
+  active: string;
+  _id: string;
 }
